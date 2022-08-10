@@ -28,7 +28,7 @@ pipeline {
             steps {
                 container('docker') {
                         withCredentials([string(credentialsId: 'docker-pass', variable: 'docker-creds')]) {
-                        sh "docker login -u devopspractice60 -p Samsung@135" 
+                        sh "docker login -u devopspractice60 -p ${docker-creds}" 
                         sh "docker build -t ${REGISTRY}:${VERSION} ."   
                         sh "docker push ${REGISTRY}:${VERSION}"
                         sh "docker rmi ${REGISTRY}:${VERSION}"
