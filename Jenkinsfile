@@ -20,24 +20,16 @@ pipeline {
                 }
             }
         }
-        stage('Docker Build') {
-            when {
-                environment name: 'DEPLOY', value: 'true'
-            }
-            steps {
-                container('docker') {
-                    sh "docker build -t ${REGISTRY}:${VERSION} ."
-                }
-            }
-        }
-        stage('Docker Publish') {
+        
+        stage('Docker Build and Publish') {
             when {
                 environment name: 'DEPLOY', value: 'true'
             }
             steps {
                 container('docker') {
                         withCredentials([string(credentialsId: 'docker-pass', variable: 'docker-creds')]) {
-                        sh "docker login -u devopspractice60 -p Samsung@135 docker.io/"    
+                        sh "docker login -u devopspractice60 -p Samsung@135 docker.io/" 
+                        sh "docker build -t ${REGISTRY}:${VERSION} ."   
                         sh "docker push ${REGISTRY}:${VERSION}"
                         sh "docker rmi ${REGISTRY}:${VERSION}"
                      }
