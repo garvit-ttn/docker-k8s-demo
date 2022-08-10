@@ -37,13 +37,34 @@ pipeline {
                 }
             }
         
-        stage('Kubernetes Deploy') {
+        stage('Kubernetes Deploy to Dev') {
             when {
                 BRANCH_NAME = dev
             }
             steps {
                 container('helm') {
                     sh "helm upgrade --install --force value-dev.yaml --set name=${NAME} --set imagetag=${VERSION}  ${NAME} ./helm"
+                }
+            }         
+        }
+
+        stage('Kubernetes Deploy to Prod') {
+            when {
+                BRANCH_NAME = master
+            }
+            steps {
+                container('helm') {
+                    sh "helm upgrade --install --force value-prod.yaml --set name=${NAME} --set imagetag=${VERSION}  ${NAME} ./helm"
+                }
+            }         
+        }
+        stage('Kubernetes Deploy to QA') {
+            when {
+                BRANCH_NAME = qa
+            }
+            steps {
+                container('helm') {
+                    sh "helm upgrade --install --force value-qa.yaml --set name=${NAME} --set imagetag=${VERSION}  ${NAME} ./helm"
                 }
             }         
         }
