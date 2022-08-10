@@ -4,7 +4,7 @@ pipeline {
         NAME = "${env.BRANCH_NAME }-${env.BUILD_ID}"
         VERSION = "${env.BUILD_ID}"
         DOMAIN = 'localhost'
-        REGISTRY = 'devopspractice60/hwdemo'
+        REGISTRY = 'devopspractice60/axiom-demo'
     }
     agent {
         kubernetes {
