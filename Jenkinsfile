@@ -1,38 +1,57 @@
 pipeline {
-  agent {
-    kubernetes {
-      yaml '''
-        apiVersion: v1
-        kind: Pod
-        spec:
-          containers:
-          - name: maven
-            image: maven:alpine
-            command:
-            - cat
-            tty: true
-          - name: node
-            image: node:16-alpine3.12
-            command:
-            - cat
-            tty: true
-        '''
+    environment {
+        DEPLOY = "${env.BRANCH_NAME == "master" || env.BRANCH_NAME == "develop" ? "true" : "false"}"
+        NAME = "${env.BRANCH_NAME == "master" ? "example" : "example-staging"}"
+        VERSION = readMavenPom().getVersion()
+        DOMAIN = 'localhost'
+        REGISTRY = 'devopspractice60/hwdemo'
+        REGISTRY_CREDENTIAL = 'docker-cred'
     }
-  }
-  stages {
-    stage('Run maven') {
-      steps {
-        container('maven') {
-          sh 'mvn -version'
-          sh ' echo Hello World > hello.txt'
-          sh 'ls -last'
+    agent {
+        kubernetes {
+            defaultContainer 'jnlp'
+            yamlFile 'build.yaml'
         }
-        container('node') {
-          sh 'npm version'
-          sh 'cat hello.txt'
-          sh 'ls -last'
-        }
-      }
     }
-  }
+    stages {
+        stage('Build') {
+            steps {
+                container('maven') {
+                    sh 'mvn package'
+                }
+            }
+        }
+        stage('Docker Build') {
+            when {
+                environment name: 'DEPLOY', value: 'true'
+            }
+            steps {
+                container('docker') {
+                    sh "docker build -t ${REGISTRY}:${VERSION} ."
+                }
+            }
+        }
+        stage('Docker Publish') {
+            when {
+                environment name: 'DEPLOY', value: 'true'
+            }
+            steps {
+                container('docker') {
+                    withDockerRegistry([credentialsId: "${REGISTRY_CREDENTIAL}", url: ""]) {
+                        sh "docker push ${REGISTRY}:${VERSION}"
+                    }
+                }
+            }
+        }
+        stage('Kubernetes Deploy') {
+            when {
+                environment name: 'DEPLOY', value: 'true'
+            }
+            steps {
+                container('helm') {
+                    sh "helm upgrade --install --force --set name=${NAME} --set image.tag=${VERSION} --set domain=${DOMAIN} ${NAME} ./helm"
+                }
+            }
+        }
+    }
 }
