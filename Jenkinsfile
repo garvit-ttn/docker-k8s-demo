@@ -43,7 +43,7 @@ pipeline {
             }
             steps {
                 container('helm') {
-                    sh "helm upgrade --install --force -f ./values-dev.yaml --set name=${NAME} --set imagetag=${VERSION}  ${NAME} ./helm"
+                    sh "helm upgrade --install --force -f ./values-dev.yaml --set name=${NAME} --set app.imagetag=${VERSION}  ${NAME} ./helm"
                 }
             }         
         }
@@ -64,7 +64,7 @@ pipeline {
             }
             steps {
                 container('helm') {
-                    sh "helm upgrade --install --force -f ./values-qa.yaml --set name=${NAME} --set imagetag=${VERSION}  ${NAME} ./helm"
+                    sh "helm upgrade --install --force -f ./values-qa.yaml --set name=${NAME} --set app.imagetag=${VERSION}  ${NAME} ./helm"
                 }
             }         
         }
