@@ -39,7 +39,7 @@ pipeline {
         
         stage('Kubernetes Deploy to Dev') {
             when {
-                BRANCH_NAME = dev
+                 branch "dev"
             }
             steps {
                 container('helm') {
@@ -50,7 +50,7 @@ pipeline {
 
         stage('Kubernetes Deploy to Prod') {
             when {
-                BRANCH_NAME = master
+                 branch "master"
             }
             steps {
                 container('helm') {
@@ -60,7 +60,7 @@ pipeline {
         }
         stage('Kubernetes Deploy to QA') {
             when {
-                BRANCH_NAME = qa
+                  branch "qa"
             }
             steps {
                 container('helm') {
