@@ -2,10 +2,9 @@ pipeline {
     environment {
         DEPLOY = "${env.BRANCH_NAME == "master" || env.BRANCH_NAME == "develop" ? "true" : "false"}"
         NAME = "${env.BRANCH_NAME == "master" ? "example" : "example-staging"}"
-        VERSION = 'latest'
+        VERSION = "${env.BUILD_ID}"
         DOMAIN = 'localhost'
         REGISTRY = 'devopspractice60/hwdemo'
-        REGISTRY_CREDENTIAL = 'docker-cred'
     }
     agent {
         kubernetes {
@@ -37,8 +36,10 @@ pipeline {
             }
             steps {
                 container('docker') {
-                    withDockerRegistry([credentialsId: "${REGISTRY_CREDENTIAL}", url: ""]) {
+                        withCredentials([string(credentialsId: 'docker-pass', variable: 'docker-creds')]) {
+                        sh "docker login -u devopspractice60 -p $docker-creds https://hub.docker.com/
                         sh "docker push ${REGISTRY}:${VERSION}"
+                     }
                     }
                 }
             }
