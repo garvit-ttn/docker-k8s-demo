@@ -1,6 +1,6 @@
 pipeline {
     environment {
-        DEPLOY = "${env.BRANCH_NAME == "master" || env.BRANCH_NAME == "develop" ? "true" : "false"}"
+        DEPLOY = "${env.BRANCH_NAME == "master" || env.BRANCH_NAME == "dev" ? "true" : "false"}"
         NAME = "${env.BRANCH_NAME }-${env.BUILD_ID}"
         VERSION = "${env.BUILD_ID}"
         DOMAIN = 'localhost'
@@ -27,7 +27,7 @@ pipeline {
             }
             steps {
                 container('docker') {
-                        withCredentials([string(credentialsId: 'docker-pass', variable: 'docker-creds')]) {
+                        withCredentials([string(credentialsId: 'pass_registry', variable: 'docker-pass')]) {
                         sh "docker login -u devopspractice60 -p Samsung@135" 
                         sh "docker build -t ${REGISTRY}:${VERSION} ."   
                         sh "docker push ${REGISTRY}:${VERSION}"
@@ -39,11 +39,11 @@ pipeline {
         
         stage('Kubernetes Deploy') {
             when {
-                environment name: 'DEPLOY', value: 'true'
+                BRANCH_NAME = dev
             }
             steps {
                 container('helm') {
-                    sh "helm upgrade --install --force --set name=${NAME} --set image.tag=${VERSION} --set domain=${DOMAIN} ${NAME} ./helm"
+                    sh "helm upgrade --install --force value-dev.yaml --set name=${NAME} --set imagetag=${VERSION}  ${NAME} ./helm"
                 }
             }         
         }
