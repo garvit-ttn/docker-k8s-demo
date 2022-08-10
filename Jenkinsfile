@@ -2,7 +2,7 @@ pipeline {
     environment {
         DEPLOY = "${env.BRANCH_NAME == "master" || env.BRANCH_NAME == "develop" ? "true" : "false"}"
         NAME = "${env.BRANCH_NAME == "master" ? "example" : "example-staging"}"
-        VERSION = readMavenPom().getVersion()
+        VERSION = 'latest
         DOMAIN = 'localhost'
         REGISTRY = 'devopspractice60/hwdemo'
         REGISTRY_CREDENTIAL = 'docker-cred'
