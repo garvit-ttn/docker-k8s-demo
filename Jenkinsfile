@@ -54,7 +54,7 @@ pipeline {
             }
             steps {
                 container('helm') {
-                    sh "helm upgrade --install --force value-prod.yaml --set name=${NAME} --set imagetag=${VERSION}  ${NAME} ./helm"
+                    sh "helm upgrade --install --force -f value-prod.yaml --set name=${NAME} --set app.imagetag=${VERSION}  ${NAME} ./helm"
                 }
             }         
         }
