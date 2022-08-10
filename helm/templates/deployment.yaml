@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.app.name }}
+  namespace: {{ .Values.app.namespace }}
+  labels:
+  {{- include "ui.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.app.replicas }}
+  selector:
+    matchLabels:
+      app: hello-world
+  template:
+    metadata:
+      labels:
+        {{- include "ui.labels" . | nindent 8 }}
+    spec:
+      containers:
+        - name: hello-world-pod
+          image: "{{ .Values.app.imagerepo }}:{{ .Values.app.imagetag }}"
+          imagePullPolicy: IfNotPresent
+          ports:
+          - containerPort: 80
+          resources:
+           {{- toYaml .Values.app.computerc | nindent 12 }}
+
+
+
+                               

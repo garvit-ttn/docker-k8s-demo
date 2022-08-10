@@ -1,7 +1,7 @@
 pipeline {
     environment {
         DEPLOY = "${env.BRANCH_NAME == "master" || env.BRANCH_NAME == "develop" ? "true" : "false"}"
-        NAME = "${env.BRANCH_NAME == "master" ? "example" : "example-staging"}"
+        NAME = "${env.BRANCH_NAME }-${env.BUILD_ID}"
         VERSION = "${env.BUILD_ID}"
         DOMAIN = 'localhost'
         REGISTRY = 'devopspractice60/hwdemo'
@@ -28,7 +28,7 @@ pipeline {
             steps {
                 container('docker') {
                         withCredentials([string(credentialsId: 'docker-pass', variable: 'docker-creds')]) {
-                        sh "docker login -u devopspractice60 -p ${docker-creds}" 
+                        sh "docker login -u devopspractice60 -p Samsung@135" 
                         sh "docker build -t ${REGISTRY}:${VERSION} ."   
                         sh "docker push ${REGISTRY}:${VERSION}"
                         sh "docker rmi ${REGISTRY}:${VERSION}"

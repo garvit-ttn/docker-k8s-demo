@@ -1,0 +1,15 @@
+app:
+  name: dev-deploy      
+  namespace: dev 
+  replicas: 1
+  env: dev
+  nodeport: 30015
+  imagerepo: devopspractice60/hwdemo
+  imagetag: v1
+  computerc:
+    limits:
+      cpu: 0.5
+      memory: 500Mi
+    requests:
+      cpu: 0.4
+      memory: 500Mi

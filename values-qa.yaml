@@ -1,0 +1,15 @@
+app:
+  name: qa-deploy
+  namespace: qa 
+  replicas: 2
+  env: qa
+  nodeport: 30011
+  imagerepo: devopspractice60/hwdemo
+  imagetag: v1
+  computerc:
+    limits:
+      cpu: 0.8
+      memory: 500Mi
+    requests:
+      cpu: 0.6
+      memory: 500Mi
