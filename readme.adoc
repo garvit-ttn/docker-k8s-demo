@@ -95,7 +95,7 @@ https://www.jenkins.io/doc/book/pipeline/multibranch/
 https://peiruwang.medium.com/build-ci-cd-multibranch-pipeline-with-jenkins-and-kubernetes-637de560d55a
 ```
 
-=== Creating Helm Chart 
+== Creating Helm Chart 
 
 Helm Chart is created to deploy application in multiple environments keeping single configuration with dynamic values depending on env's.
 
@@ -126,11 +126,11 @@ vim values-prod.yaml
 ```
 +
 
-=== Creating JenkinsFile to run complete pipeline:
+== Creating JenkinsFile to run complete pipeline:
 
 Declarative JenkinsFile has been written with few conditional, which in turn trigger job accordingly.
 
-. Jenkinsfile:
+=== Jenkinsfile:
 +
 ```
 pipeline {
@@ -240,8 +240,8 @@ pipeline {
         }
     }
 }
-
-=== Project Deliverable
+```
+== Project Deliverable
 
 Complete source code with Jenkinsfile,Helm Chart,Dockerfile etc have been pushed to git repo. Please refer below:
 https://github.com/garvit-ttn/docker-k8s-demo/
