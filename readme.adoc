@@ -84,21 +84,21 @@ jenkins    NodePort    10.103.31.217    <none>         8080:32664/TCP    59s
 Now we can access the Jenkins instance at 192.168.99.100:30104/
 For reference Please refer https://www.jenkins.io/doc/book/installing/kubernetes/
 ----
++
 === Integration and Creation of Jenkins Pipeline
 
 This section will explain how to integrate and create multibranch pipeline to deploy app on minikube cluster.
 -Install necessary plugins like (Docker,Maven,KubernetesCLI,Kubernetes-Config)
 -Manage Credentials in Jenkins and use as groovy variable in pipeline code (docker-registry-pass,github credentials,minikube cluster certificate creds)
 
-
-. For Detailed Steps refer below articles: 
+==== For Detailed Steps refer below articles: 
 +
 ```
 https://www.jenkins.io/doc/book/pipeline/multibranch/
 https://www.jenkins.io/doc/book/scaling/
 
 ```
-
++
 === Creating Helm Chart 
 
 Helm Chart is created to deploy application in multiple environments keeping single configuration with dynamic values depending on env's.
@@ -142,9 +142,9 @@ pipeline {
         NAME = "${env.BRANCH_NAME }-${env.BUILD_ID}"
         VERSION = "${env.BUILD_ID}"
         DOMAIN = 'localhost'
-        REGISTRY_DEV = 'devopspractice60/axiom-demo-dev'
-        REGISTRY_QA = 'devopspractice60/axiom-demo-qa'
-        REGISTRY_PROD = 'devopspractice60/axiom-demo-prod'
+        REGISTRY_DEV = 'devopspractice60/demo-dev'
+        REGISTRY_QA = 'devopspractice60/demo-qa'
+        REGISTRY_PROD = 'devopspractice60/demo-prod'
 
     }
     agent {
