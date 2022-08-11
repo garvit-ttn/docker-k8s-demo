@@ -84,7 +84,7 @@ jenkins    NodePort    10.103.31.217    <none>         8080:32664/TCP    59s
 Now we can access the Jenkins instance at 192.168.99.100:30104/
 For reference Please refer https://www.jenkins.io/doc/book/installing/kubernetes/
 ----
-+
+
 === Integration and Creation of Jenkins Pipeline
 
 This section will explain how to integrate and create multibranch pipeline to deploy app on minikube cluster.
@@ -92,13 +92,13 @@ This section will explain how to integrate and create multibranch pipeline to de
 -Manage Credentials in Jenkins and use as groovy variable in pipeline code (docker-registry-pass,github credentials,minikube cluster certificate creds)
 
 ==== For Detailed Steps refer below articles: 
-+
+
 ```
 https://www.jenkins.io/doc/book/pipeline/multibranch/
 https://www.jenkins.io/doc/book/scaling/
 
 ```
-+
+
 === Creating Helm Chart 
 
 Helm Chart is created to deploy application in multiple environments keeping single configuration with dynamic values depending on env's.
@@ -128,12 +128,11 @@ vim values-dev.yaml
 vim values-qa.yaml
 vim values-prod.yaml
 ```
-+
 === Creating JenkinsFile to run complete pipeline:
 
 Declarative JenkinsFile has been written with few conditional, which in turn trigger job accordingly.
 
-=== Jenkinsfile:
+==== Jenkinsfile:
 
 ```
 pipeline {
