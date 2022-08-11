@@ -1,5 +1,0 @@
-= CI-CD (Java Hello World Application Deployment to K8s)
-
-
-
-
