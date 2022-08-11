@@ -1,10 +1,13 @@
 pipeline {
     environment {
-        DEPLOY = "${env.BRANCH_NAME == "master" || env.BRANCH_NAME == "dev" ? "true" : "false"}"
+        
         NAME = "${env.BRANCH_NAME }-${env.BUILD_ID}"
         VERSION = "${env.BUILD_ID}"
         DOMAIN = 'localhost'
-        REGISTRY = 'devopspractice60/axiom-demo'
+        REGISTRY_DEV = 'devopspractice60/axiom-demo-dev'
+        REGISTRY_QA = 'devopspractice60/axiom-demo-qa'
+        REGISTRY_PROD = 'devopspractice60/axiom-demo-prod'
+
     }
     agent {
         kubernetes {
@@ -21,21 +24,53 @@ pipeline {
             }
         }
         
-        stage('Docker Build and Publish') {
+        stage('Docker Build and Publish to DEV') {
             when {
-                environment name: 'DEPLOY', value: 'true'
+                 branch "dev"
             }
             steps {
                 container('docker') {
-                        withCredentials([string(credentialsId: 'pass_registry', variable: 'docker-pass')]) {
-                        sh "docker login -u devopspractice60 -p Samsung@135" 
-                        sh "docker build -t ${REGISTRY}:${VERSION} ."   
-                        sh "docker push ${REGISTRY}:${VERSION}"
-                        sh "docker rmi ${REGISTRY}:${VERSION}"
+                        withCredentials([string(credentialsId: 'pass_registry', variable: 'docker_pass')]) {
+                        sh "docker login -u devopspractice60 -p $docker_pass" 
+                        sh "docker build -t ${REGISTRY_DEV}:${VERSION} ."   
+                        sh "docker push ${REGISTRY_DEV}:${VERSION}"
+                        sh "docker rmi ${REGISTRY_DEV}:${VERSION}"
                      }
                     }
                 }
             }
+
+        stage('Docker Build and Publish to QA') {
+            when {
+                 branch "qa"
+            }
+            steps {
+                container('docker') {
+                        withCredentials([string(credentialsId: 'pass_registry', variable: 'docker_pass')]) {
+                        sh "docker login -u devopspractice60 -p $docker_pass" 
+                        sh "docker build -t ${REGISTRY_QA}:${VERSION} ."   
+                        sh "docker push ${REGISTRY_QA}:${VERSION}"
+                        sh "docker rmi ${REGISTRY_QA}:${VERSION}"
+                     }
+                    }
+                }
+            }
+
+        stage('Docker Build and Publish to PROD') {
+            when {
+                 branch "master"
+            }
+            steps {
+                container('docker') {
+                        withCredentials([string(credentialsId: 'pass_registry', variable: 'docker_pass')]) {
+                        sh "docker login -u devopspractice60 -p $docker_pass" 
+                        sh "docker build -t ${REGISTRY_PROD}:${VERSION} ."   
+                        sh "docker push ${REGISTRY_PROD}:${VERSION}"
+                        sh "docker rmi ${REGISTRY_PROD}:${VERSION}"
+                     }
+                    }
+                }
+            }        
         
         stage('Kubernetes Deploy to Dev') {
             when {
@@ -43,7 +78,7 @@ pipeline {
             }
             steps {
                 container('helm') {
-                    sh "helm upgrade --install --force -f ./values-dev.yaml --set name=${NAME} --set app.imagetag=${VERSION}  ${NAME} ./helm"
+                    sh "helm upgrade --install --force -f ./values-dev.yaml --set app.name=${NAME} --set app.imagetag=${VERSION}  ${NAME} ./helm"
                 }
             }         
         }
@@ -54,7 +89,7 @@ pipeline {
             }
             steps {
                 container('helm') {
-                    sh "helm upgrade --install --force -f ./values-prod.yaml --set name=${NAME} --set app.imagetag=${VERSION}  ${NAME} ./helm"
+                    sh "helm upgrade --install --force -f ./values-prod.yaml --set app.name=${NAME} --set app.imagetag=${VERSION}  ${NAME} ./helm"
                 }
             }         
         }
@@ -64,7 +99,7 @@ pipeline {
             }
             steps {
                 container('helm') {
-                    sh "helm upgrade --install --force -f ./values-qa.yaml --set name=${NAME} --set app.imagetag=${VERSION}  ${NAME} ./helm"
+                    sh "helm upgrade --install --force -f ./values-qa.yaml --set app.name=${NAME} --set app.imagetag=${VERSION}  ${NAME} ./helm"
                 }
             }         
         }
