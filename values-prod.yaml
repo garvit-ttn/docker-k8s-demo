@@ -4,7 +4,7 @@ app:
   replicas: 3
   env: prod
   nodeport: 30013
-  imagerepo: devopspractice60/axiom-demo-prod
+  imagerepo: devopspractice60/demo-prod
   imagetag: v1
   computerc:
     limits:

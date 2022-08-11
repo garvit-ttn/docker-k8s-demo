@@ -4,7 +4,7 @@ app:
   replicas: 1
   env: dev
   nodeport: 30015
-  imagerepo: devopspractice60/axiom-demo-dev
+  imagerepo: devopspractice60/demo-dev
   imagetag: v1
   computerc:
     limits:

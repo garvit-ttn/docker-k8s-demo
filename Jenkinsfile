@@ -4,9 +4,9 @@ pipeline {
         NAME = "${env.BRANCH_NAME }-${env.BUILD_ID}"
         VERSION = "${env.BUILD_ID}"
         DOMAIN = 'localhost'
-        REGISTRY_DEV = 'devopspractice60/axiom-demo-dev'
-        REGISTRY_QA = 'devopspractice60/axiom-demo-qa'
-        REGISTRY_PROD = 'devopspractice60/axiom-demo-prod'
+        REGISTRY_DEV = 'devopspractice60/demo-dev'
+        REGISTRY_QA = 'devopspractice60/demo-qa'
+        REGISTRY_PROD = 'devopspractice60/demo-prod'
 
     }
     agent {

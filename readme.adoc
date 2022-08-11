@@ -1,4 +1,4 @@
-= Axiom Kubernetes Java Demo POC
+= Java Application Deployment in K8s 
 :toc:
 :toclevels: 3
 :toc-placement!:
@@ -15,9 +15,9 @@ Jenkins namespace will have Jenkins POD deployed.
 
 == Implemention Steps
 
-== Create Kubernetes Cluster
+=== Create Kubernetes Cluster
 
-=== Using Minikube
+==== Using Minikube
 
 This will create a one node development cluster.
 
@@ -31,7 +31,7 @@ This will create a one node development cluster.
 Detailed instructions: http://kubernetes.io/docs/getting-started-guides/minikube/
 
 
-== Create namespaces for different envs
+=== Create namespaces for different envs
 
 This section will explain how to create namespaces in minikube cluster as per problem statement.
 
@@ -84,18 +84,22 @@ jenkins    NodePort    10.103.31.217    <none>         8080:32664/TCP    59s
 Now we can access the Jenkins instance at 192.168.99.100:30104/
 For reference Please refer https://www.jenkins.io/doc/book/installing/kubernetes/
 ----
-== Integration and Creation of Jenkins Pipeline
+=== Integration and Creation of Jenkins Pipeline
 
-This section will explain how to integrate and create multibranch pipeline to deploy app on minikube cluster
+This section will explain how to integrate and create multibranch pipeline to deploy app on minikube cluster.
+-Install necessary plugins like (Docker,Maven,KubernetesCLI,Kubernetes-Config)
+-Manage Credentials in Jenkins and use as groovy variable in pipeline code (docker-registry-pass,github credentials,minikube cluster certificate creds)
 
-. Refered Below Blogs 
+
+. For Detailed Steps refer below articles: 
 +
 ```
 https://www.jenkins.io/doc/book/pipeline/multibranch/
-https://peiruwang.medium.com/build-ci-cd-multibranch-pipeline-with-jenkins-and-kubernetes-637de560d55a
+https://www.jenkins.io/doc/book/scaling/
+
 ```
 
-== Creating Helm Chart 
+=== Creating Helm Chart 
 
 Helm Chart is created to deploy application in multiple environments keeping single configuration with dynamic values depending on env's.
 
@@ -125,13 +129,12 @@ vim values-qa.yaml
 vim values-prod.yaml
 ```
 +
-
-== Creating JenkinsFile to run complete pipeline:
+=== Creating JenkinsFile to run complete pipeline:
 
 Declarative JenkinsFile has been written with few conditional, which in turn trigger job accordingly.
 
 === Jenkinsfile:
-+
+
 ```
 pipeline {
     environment {
@@ -241,7 +244,39 @@ pipeline {
     }
 }
 ```
-== Project Deliverable
+== Solution Summary
+This section refers summary of complete CI-CD Implemention above problem statement.Below steps will be helpful in running this project.
 
-Complete source code with Jenkinsfile,Helm Chart,Dockerfile etc have been pushed to git repo. Please refer below:
-https://github.com/garvit-ttn/docker-k8s-demo/
+. Prerequisite [Complete Implemention Setup]
+
+. Cloning Project Repo:
++
+[source, text]
+----
+git clone https://github.com/garvit-ttn/docker-k8s-demo.git
+----
++
+. Jenkins Job Triggered Automatically upon pushing changes to Git Repo:
+
+=== Demo Output Images:
+
+.MultiBranch Pipeline
+image::images/pipeline.png[]
+
+.Dev Branch Pipeline Output
+image::images/dev.png[]
+
+.QA Branch Pipeline Output
+image::images/qa.png[]
+
+.PROD Branch Pipeline Output
+image::images/prod.png[]
+
+.Application Deployment Status
+image::images/deploy.png[]
+
+.Application CPU Request on namespace
+image::images/cpu.png[]
+
+.Application Running Status
+image::images/app.png[]
