@@ -122,7 +122,7 @@ hello-world/
 ```
 +
 . Creating Dynamic Values.yaml files depending on environment:
-+
+
 ```
 vim values-dev.yaml
 vim values-qa.yaml
@@ -257,25 +257,32 @@ git clone https://github.com/garvit-ttn/docker-k8s-demo.git
 +
 . Jenkins Job Triggered Automatically upon pushing changes to Git Repo:
 
-=== Demo Output Images:
+==== Demo Output Images:
 
 .MultiBranch Pipeline
 image::images/pipeline.png[]
 
+
 .Dev Branch Pipeline Output
 image::images/dev.png[]
+
 
 .QA Branch Pipeline Output
 image::images/qa.png[]
 
+
 .PROD Branch Pipeline Output
 image::images/prod.png[]
+
 
 .Application Deployment Status
 image::images/deploy.png[]
 
+
 .Application CPU Request on namespace
 image::images/cpu.png[]
 
+
 .Application Running Status
 image::images/app.png[]
+
